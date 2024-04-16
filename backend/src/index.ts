@@ -1,6 +1,8 @@
-import express, { Request, Response } from "express";
+import express from "express";
 import cors from "cors";
 import "dotenv/config";
+import cookieParser from "cookie-parser";
+import morgan from "morgan";
 
 import dbConnect from "./config/dbConnect";
 import userRoutes from "./routes/users";
@@ -10,6 +12,7 @@ dbConnect();
 
 const app = express();
 app.use(express.json());
+app.use(morgan("dev"));
 app.use(express.urlencoded({ extended: true }));
 app.use(
   cors({
@@ -17,6 +20,7 @@ app.use(
     credentials: true,
   })
 );
+app.use(cookieParser());
 
 app.use("/api/users", userRoutes);
 app.use("/api/auth", authRoutes);

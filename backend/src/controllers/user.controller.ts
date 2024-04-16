@@ -9,6 +9,7 @@ export const userController = async (req: Request, res: Response) => {
   if (!errors.isEmpty()) {
     return res.status(400).json({ message: errors.array() });
   }
+
   try {
     let user = await User.findOne({
       email: req.body.email,
@@ -22,9 +23,13 @@ export const userController = async (req: Request, res: Response) => {
     user = new User(req.body);
     await user.save();
 
-    const token = jwt.sign({ _id: user._id }, envConfig.get("jwtPrivateKey"), {
-      expiresIn: "1d",
-    });
+    const token = jwt.sign(
+      { userId: user._id },
+      envConfig.get("jwtPrivateKey"),
+      {
+        expiresIn: "1d",
+      }
+    );
     res.cookie("auth_token", token, {
       httpOnly: true,
       secure: envConfig.get("node_env") === "production",
