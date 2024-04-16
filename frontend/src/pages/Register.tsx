@@ -35,7 +35,7 @@ const Register = () => {
     onError: (error: Error) => {
       console.log(error);
       showToast({
-        message: error.response.data.message,
+        message: error.message,
         type: "ERROR",
       });
     },
