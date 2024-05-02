@@ -17,9 +17,9 @@ test.beforeEach(async ({ page }) => {
 test("should allow user to add a hotel", async ({ page }) => {
   await page.goto(`${UI_URL}/add-hotel`);
 
-  await page.locator('[name="name"]').fill("Test Hotel");
-  await page.locator('[name="city"]').fill("Test city");
-  await page.locator('[name="country"]').fill("Test country");
+  await page.locator('[name="name"]').fill("Marine Hotel");
+  await page.locator('[name="city"]').fill("Mumbai");
+  await page.locator('[name="country"]').fill("India");
   await page.locator('[name="description"]').fill("Test Hotel Description");
   await page.locator('[name="pricePerNight"]').fill("100");
   await page.selectOption('select[name="starRating"]', "3");
@@ -31,7 +31,7 @@ test("should allow user to add a hotel", async ({ page }) => {
   await page.locator('[name="adultCount"]').fill("2");
   await page.locator('[name="childCount"]').fill("4");
 
-  await page.setInputFiles('[name="imageFiles"]', [
+  await page.setInputFiles('[name="imageFile"]', [
     path.join(__dirname, "files", "hotel1.jpg"),
     path.join(__dirname, "files", "hotel2.jpg"),
     path.join(__dirname, "files", "hotel3.jpg"),
@@ -39,4 +39,23 @@ test("should allow user to add a hotel", async ({ page }) => {
 
   await page.getByRole("button", { name: "Save" }).click();
   await expect(page.getByText("Hotel Saved!")).toBeVisible();
+});
+
+test("should display hotels", async ({ page }) => {
+  await page.goto(`${UI_URL}/my-hotel`);
+  await expect(page.getByText("Marine")).toBeVisible();
+});
+
+test("should edit hotel", async ({ page }) => {
+  await page.goto(`${UI_URL}/my-hotel`);
+  await page.getByRole("link", { name: "View Details" }).click();
+  await page.waitForSelector('[name="name"]', { state: "attached" });
+  await expect(page.locator('[name="name"]')).toHaveValue("Marine Hotel");
+  await page.locator('[name="name"]').fill("Marine");
+  await page.getByRole("button", { name: "Save" }).click();
+  await expect(page.getByText("Hotel Updated!")).toBeVisible();
+  await page.reload();
+  await expect(page.locator('[name="name"]')).toHaveValue("Marine");
+  await page.locator('[name="name"]').fill("Marine Hotel");
+  await page.getByRole("button", { name: "Save" }).click();
 });

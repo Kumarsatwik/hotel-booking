@@ -5,6 +5,8 @@ import { Toaster } from "react-hot-toast";
 import SignIn from "./pages/Signin";
 import AddHotel from "./pages/AddHotel";
 import { useAppContext } from "./contexts/AppContext";
+import MyHotels from "./pages/MyHotels";
+import EditHotel from "./pages/EditHotel";
 function App() {
   const { isLoggedIn } = useAppContext();
 
@@ -46,6 +48,31 @@ function App() {
               element={
                 <Layout>
                   <AddHotel />
+                </Layout>
+              }
+            ></Route>
+          </>
+        )}
+        {isLoggedIn && (
+          <>
+            <Route
+              path="/edit-hotel/:hotelId"
+              element={
+                <Layout>
+                  <EditHotel />
+                </Layout>
+              }
+            ></Route>
+          </>
+        )}
+
+        {isLoggedIn && (
+          <>
+            <Route
+              path="/my-hotel"
+              element={
+                <Layout>
+                  <MyHotels />
                 </Layout>
               }
             ></Route>

@@ -30,7 +30,7 @@ test("should allow user to register", async ({ page }) => {
 
   await page.locator("[name=firstName]").fill("John1");
   await page.locator("[name=lastName]").fill("Doe1");
-  await page.locator("[name=email]").fill(testEmail);
+  await page.locator("[name=email]").fill("abc@gmail.com");
   await page.locator("[name=password]").fill("123456");
   await page.locator("[name=confirmPassword]").fill("123456");
   await page.getByRole("button", { name: "Create Account" }).click();
