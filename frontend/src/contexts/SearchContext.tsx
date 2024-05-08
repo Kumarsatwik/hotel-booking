@@ -44,7 +44,9 @@ export const SearchContextProvider = ({
     setCheckOut(checkOut);
     setAdultCount(adultCount);
     setChildCount(childCount);
-    setHotelId(hotelId || "");
+    if (hotelId) {
+      setHotelId(hotelId);
+    }
   };
 
   return (
