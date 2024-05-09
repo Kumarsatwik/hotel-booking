@@ -1,7 +1,11 @@
 import express, { Request, Response } from "express";
 
-import { userController } from "../controllers/user.controller";
+import {
+  userController,
+  userDetailsController,
+} from "../controllers/user.controller";
 import { check } from "express-validator";
+import { verifyToken } from "../middleware/auth";
 
 const router = express.Router();
 
@@ -17,5 +21,7 @@ router.post(
   ],
   userController
 );
+
+router.get("/me", verifyToken, userDetailsController);
 
 export default router;

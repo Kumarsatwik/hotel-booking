@@ -1,3 +1,12 @@
+import { BookingType } from "./../../../frontend/src/types/hotel";
+export type UserType = {
+  _id: string;
+  email: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+};
+
 export type HotelType = {
   _id: string;
   userId: string;
@@ -14,6 +23,7 @@ export type HotelType = {
   numberOfRating: number;
   imageUrls: string[];
   lastUpdated: Date;
+  bookings: BookingType[];
 };
 
 export type HotelSearchResponse = {
@@ -25,3 +35,8 @@ export type HotelSearchResponse = {
   };
 };
 
+export type PaymentIntentResponse = {
+  paymentIntentId: string;
+  clientSecret: string;
+  totalCost: number;
+};

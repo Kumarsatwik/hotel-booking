@@ -4,6 +4,11 @@ import Hotel from "../models/hotel";
 import { HotelSearchResponse } from "../shared/types";
 import { validationResult } from "express-validator";
 
+import Stripe from "stripe";
+import { envConfig } from "../config/envConfig";
+
+const stripe = new Stripe(envConfig.get("STRIPE_SECRET_KEY"));
+
 export const hotelSearchController = async (req: Request, res: Response) => {
   try {
     const query = constructSearchQuery(req.query);
@@ -121,4 +126,34 @@ export const hotelDetailController = async (req: Request, res: Response) => {
     console.log(error);
     return res.status(500).json({ message: "Error fetching hotel" });
   }
+};
+
+export const hotelPaymentController = async (req: Request, res: Response) => {
+  const { numberOfNights } = req.body;
+  const hotelId = req.params.hotelId;
+
+  const hotel = await Hotel.findById(hotelId);
+  if (!hotel) {
+    return res.status(400).json({ message: "Hotel not found" });
+  }
+  const totalCost = hotel.pricePerNight * numberOfNights;
+  const paymentIntent = await stripe.paymentIntents.create({
+    amount: totalCost,
+    currency: "USD",
+    metadata: {
+      hotelId,
+      userId: req.userId,
+    },
+  });
+
+  if (!paymentIntent.client_secret) {
+    return res.status(500).json({ message: "Error creating payment intent" });
+  }
+
+  const response = {
+    paymentIntentId: paymentIntent.id,
+    clientSecret: paymentIntent.client_secret.toString(),
+    totalCost,
+  };
+  return res.send(response);
 };
